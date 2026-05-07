@@ -3,21 +3,30 @@ import { useState } from "react";
 
 function App() {
   const [cart, setCart] = useState([]);
+  const [darkMode, setDarkMode] = useState(false);
+  const [search, setSearch] = useState("");
+
+  // LOGIN STATES
+  const [email, setEmail] = useState("");
+  const [isSignup, setIsSignup] = useState(true);
+
+  // FEEDBACK
+  const [feedback, setFeedback] = useState("");
 
   const hampers = [
     {
       name: "Chocolate Hamper",
-      price: 499,
+      price: "499",
       image: "/images/Chocolate.png",
     },
     {
       name: "Birthday Hamper",
-      price: 999,
+      price: "999",
       image: "/images/Birthday.png",
     },
     {
       name: "Luxury Gift Box",
-      price: 1499,
+      price: "1499",
       image: "/images/luxury.png",
     },
   ];
@@ -27,49 +36,116 @@ function App() {
   };
 
   const removeFromCart = (indexToRemove) => {
-    setCart(cart.filter((_, index) => index !== indexToRemove));
+    setCart(
+      cart.filter((_, index) => index !== indexToRemove)
+    );
   };
 
   const total = cart.reduce(
-    (sum, item) => sum + item.price,
+    (sum, item) => sum + Number(item.price),
     0
   );
 
-  const whatsappMessage = encodeURIComponent(`
-Hello NN Creation 🌸
+  const handleAuth = () => {
+    if (!email) {
+      alert("Please enter email");
+      return;
+    }
 
-I want to order:
+    if (isSignup) {
+      alert("Signup successful 🚀");
+    } else {
+      alert("Login successful 🎉");
+    }
 
-${cart
-  .map(
-    (item) =>
-      `• ${item.name} - ₹${item.price}`
-  )
-  .join("\n")}
+    setEmail("");
+  };
 
-Total: ₹${total}
-`);
+  const submitFeedback = () => {
+    if (!feedback) {
+      alert("Please write feedback");
+      return;
+    }
+
+    alert("Thank you for your feedback 💖");
+    setFeedback("");
+  };
 
   return (
-    <div>
+    <div className={darkMode ? "dark" : ""}>
 
       {/* NAVBAR */}
       <nav className="navbar">
+
         <h1>NN Creation 🎁</h1>
 
         <div className="nav-links">
           <a href="#shop">Shop</a>
           <a href="#about">About</a>
+          <a href="#feedback">Feedback</a>
           <a href="#contact">Contact</a>
         </div>
 
-        <div className="cart-count">
-          🛒 {cart.length}
+        <div className="nav-right">
+
+          <button
+            className="dark-btn"
+            onClick={() => setDarkMode(!darkMode)}
+          >
+            {darkMode ? "☀️" : "🌙"}
+          </button>
+
+          <div className="cart-count">
+            🛒 {cart.length}
+          </div>
+
         </div>
       </nav>
 
+      {/* LOGIN SECTION */}
+      <section className="login-section">
+
+        <div className="login-box">
+
+          <h2>
+            Login / Signup 🔐
+          </h2>
+
+          <input
+            type="email"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+            className="login-input"
+          />
+
+          <button
+            className="login-main-btn"
+            onClick={handleAuth}
+          >
+            {isSignup ? "Signup" : "Login"}
+          </button>
+
+          <p
+            className="switch-text"
+            onClick={() =>
+              setIsSignup(!isSignup)
+            }
+          >
+            {isSignup
+              ? "Already have account? Login"
+              : "Don't have account? Signup"}
+          </p>
+
+        </div>
+
+      </section>
+
       {/* HERO */}
       <section className="hero">
+
         <div className="hero-content">
 
           <h2>
@@ -89,6 +165,7 @@ Total: ₹${total}
           </a>
 
         </div>
+
       </section>
 
       {/* PRODUCTS */}
@@ -98,37 +175,52 @@ Total: ₹${total}
           Featured Hampers
         </h2>
 
+        <input
+          type="text"
+          placeholder="Search hampers..."
+          className="search-bar"
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
         <div className="container">
 
-          {hampers.map((hamper, index) => (
+          {hampers
+            .filter((hamper) =>
+              hamper.name
+                .toLowerCase()
+                .includes(search.toLowerCase())
+            )
+            .map((hamper, index) => (
 
-            <div className="card" key={index}>
+              <div className="card" key={index}>
 
-              <img
-                src={hamper.image}
-                alt={hamper.name}
-              />
+                <img
+                  src={hamper.image}
+                  alt={hamper.name}
+                />
 
-              <div className="card-content">
+                <div className="card-content">
 
-                <h3>{hamper.name}</h3>
+                  <h3>{hamper.name}</h3>
 
-                <p className="price">
-                  ₹{hamper.price}
-                </p>
+                  <p className="price">
+                    ₹{hamper.price}
+                  </p>
 
-                <button
-                  onClick={() => addToCart(hamper)}
-                >
-                  Add to Cart
-                </button>
+                  <button
+                    onClick={() => addToCart(hamper)}
+                  >
+                    Add to Cart
+                  </button>
+
+                </div>
 
               </div>
-            </div>
 
-          ))}
+            ))}
 
         </div>
+
       </section>
 
       {/* ABOUT */}
@@ -157,81 +249,7 @@ Total: ₹${total}
           </div>
 
         </div>
-      </section>
 
-      {/* CUSTOM HAMPERS */}
-      <section className="custom-section">
-
-        <h2 className="section-title">
-          Customized Hampers 💖
-        </h2>
-
-        <p className="custom-text">
-          We create personalized hampers for
-          birthdays, weddings, baby showers,
-          anniversaries, bridesmaids,
-          festive gifting and more.
-        </p>
-
-        <div className="custom-grid">
-
-          <div className="custom-box">
-            🎂 Birthday Hampers
-          </div>
-
-          <div className="custom-box">
-            💍 Wedding Hampers
-          </div>
-
-          <div className="custom-box">
-            👶 Baby Shower Hampers
-          </div>
-
-          <div className="custom-box">
-            🎄 Festive Hampers
-          </div>
-
-        </div>
-      </section>
-
-      {/* TESTIMONIALS */}
-      <section className="testimonials">
-
-        <h2 className="section-title">
-          What Our Customers Say 💕
-        </h2>
-
-        <div className="testimonial-grid">
-
-          <div className="testimonial-card">
-            <p>
-              “Absolutely loved the packaging
-              and customization. It looked
-              so premium!”
-            </p>
-
-            <h4>- Riya</h4>
-          </div>
-
-          <div className="testimonial-card">
-            <p>
-              “The birthday hamper was beautiful.
-              Perfect gifting experience!”
-            </p>
-
-            <h4>- Ananya</h4>
-          </div>
-
-          <div className="testimonial-card">
-            <p>
-              “Amazing quality and fast delivery.
-              Highly recommended!”
-            </p>
-
-            <h4>- Sneha</h4>
-          </div>
-
-        </div>
       </section>
 
       {/* CART */}
@@ -279,26 +297,19 @@ Total: ₹${total}
               Total: ₹{total}
             </h3>
 
-            <div
-              style={{
-                textAlign: "center",
-                marginTop: "30px",
-              }}
+            <a
+              href={`https://wa.me/919820466623?text=Hello NN Creation! I want to order: ${cart
+                .map((item) => item.name)
+                .join(", ")} | Total ₹${total}`}
+              target="_blank"
+              rel="noreferrer"
             >
 
-              <a
-                href={`https://wa.me/919820466623?text=${whatsappMessage}`}
-                target="_blank"
-                rel="noreferrer"
-              >
+              <button className="checkout-btn">
+                Buy on WhatsApp
+              </button>
 
-                <button className="checkout-btn">
-                  Buy on WhatsApp
-                </button>
-
-              </a>
-
-            </div>
+            </a>
 
           </>
 
@@ -314,12 +325,11 @@ Total: ₹${total}
         </h2>
 
         <p>
-          See our latest hamper creations &
-          customer surprises.
+          See our latest hamper creations
         </p>
 
         <a
-          href="https://www.instagram.com/itsnncreations?igsh=Z3Z1bDZyY2h6NWh2"
+          href="https://instagram.com/itsnncreations"
           target="_blank"
           rel="noreferrer"
         >
@@ -332,8 +342,39 @@ Total: ₹${total}
 
       </section>
 
+      {/* FEEDBACK */}
+      <section
+        className="feedback-section"
+        id="feedback"
+      >
+
+        <h2 className="section-title">
+          Customer Feedback 💖
+        </h2>
+
+        <textarea
+          placeholder="Write your feedback..."
+          value={feedback}
+          onChange={(e) =>
+            setFeedback(e.target.value)
+          }
+          className="feedback-input"
+        />
+
+        <button
+          className="feedback-btn"
+          onClick={submitFeedback}
+        >
+          Submit Feedback
+        </button>
+
+      </section>
+
       {/* CONTACT */}
-      <section className="contact" id="contact">
+      <section
+        className="contact"
+        id="contact"
+      >
 
         <h2 className="section-title">
           Contact Us
@@ -361,8 +402,7 @@ Total: ₹${total}
       <footer>
 
         <p>
-          © 2026 NN Creation.
-          Crafted with 💖
+          © 2026 NN Creation. Crafted with 💖
         </p>
 
       </footer>
