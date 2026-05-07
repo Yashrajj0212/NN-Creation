@@ -341,7 +341,7 @@ Total: ₹${total}
 
         <p>📞 +91 9820466623</p>
 
-        <p>📧 nncreation@gmail.com</p>
+        <p>📧 Niti.goyal3553@gmail.com</p>
 
         <a
           href="https://wa.me/919820466623"
