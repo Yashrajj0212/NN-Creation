@@ -252,6 +252,46 @@ function App() {
 
       </section>
 
+      {/* TESTIMONIALS */}
+<section className="testimonials">
+
+  <h2 className="section-title">
+    What Our Customers Say 💕
+  </h2>
+
+  <div className="testimonial-grid">
+
+    <div className="testimonial-card">
+      <p>
+        “Absolutely loved the packaging and
+        customization. It looked so premium!”
+      </p>
+
+      <h4>- Riya</h4>
+    </div>
+
+    <div className="testimonial-card">
+      <p>
+        “The birthday hamper was beautiful.
+        Perfect gifting experience!”
+      </p>
+
+      <h4>- Ananya</h4>
+    </div>
+
+    <div className="testimonial-card">
+      <p>
+        “Amazing quality and fast delivery.
+        Highly recommended!”
+      </p>
+
+      <h4>- Sneha</h4>
+    </div>
+
+  </div>
+
+</section>
+
       {/* CART */}
       <section className="cart-section">
 
